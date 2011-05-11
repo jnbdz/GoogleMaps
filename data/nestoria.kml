@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<kml xmlns="http://earth.google.com/kml/2.1">
+<NetworkLink>
+    <name>Nestoria Property Search</name>
+    <description>Real estate property search. Search over 400,000 flats and houses in the UK.</description>
+    <Link>
+        <href>http://jean-nicolas.name/labs/google_maps/data/nestoria-1.kml</href>
+        <viewRefreshMode>onStop</viewRefreshMode>
+        <viewRefreshTime>2</viewRefreshTime>
+        <viewFormat>kmlnetworklink=1&amp;coord_[bboxNorth],[bboxEast],[bboxSouth],[bboxWest]</viewFormat>
+    </Link>
+</NetworkLink>
+</kml>

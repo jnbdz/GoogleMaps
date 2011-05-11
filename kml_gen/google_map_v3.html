@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Google Maps 2 Test</title>
+	</head>
+	<body>
+		<button type="button" id="goTo">Pan to</button>
+		<div id="map_canvas" style="width: 800px; height: 400px"></div>
+		<script src="../mootools-1.2.3-core.js"></script>
+		<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script src="geoxml13,1Mar2010.js"></script>
+		<script>
+			window.addEvent('load', function(){
+				
+			var latlng = new google.maps.LatLng(-34.397, 150.644);
+    		var map = new google.maps.Map($("map_canvas"), {
+					zoom: 2,
+					center: latlng,
+					mapTypeId: google.maps.MapTypeId.HYBRID
+				});
+			
+			var kml = new GGeoXml("http://jean-nicolas.name/labs/google_maps/kml_gen/NetworkLink.kml");
+			map.addOverlay(kml);
+				
+			});
+		</script>
+	</body>
+</html>

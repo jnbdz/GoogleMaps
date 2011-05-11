@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Raf_1 Test</title>
+	</head>
+	<body>
+		<button type="button" id="goTo">Pan to</button>
+		<div id="map_canvas" style="width: 800px; height: 400px"></div>
+		<script src="../mootools-1.2.3-core.js"></script>
+		<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script>
+			window.addEvent('load', function(){
+				
+				/*
+				 * ---------------------
+				 * Init. Google Maps
+				 * ---------------------
+				 */
+				
+				var minZoom = 5;
+				var googleMaps = google.maps;
+				var googleMapsEvent = googleMaps.event;
+				var markersArray = [];
+				var markers = [];
+				
+				var latlng = new googleMaps.LatLng(0, 0);
+				var mapOptions = {
+					zoom: 1,
+					center: latlng,
+					mapTypeId: googleMaps.MapTypeId.HYBRID
+				};
+				var map = new googleMaps.Map($("map_canvas"), mapOptions);
+				
+				var boundsChangedTimer = false;
+				
+				/*
+				 * -------------------------
+				 * Init. Google Maps Events
+				 * -------------------------
+				 */
+				
+				var infowindow = new googleMaps.InfoWindow();
+				
+				googleMapsEvent.addListener(map, 'click', function() {
+						infowindow.close();
+					});
+				
+				/*googleMapsEvent.addListener(map, 'bounds_changed', function() {
+					
+					var Zoom = map.getZoom();
+					
+					if(Zoom >= minZoom){
+						
+						$clear(boundsChangedTimer);
+						
+						var ne = map.getBounds().getNorthEast();
+						var n = ne.b;
+						var e = ne.c;
+						var sw = map.getBounds().getSouthWest();
+						var s = sw.b;
+						var w = sw.c;
+						var bbox = w + ', ' + s + ',' + e + ',' + n;
+						
+						boundsChangedTimer = (function(){
+							new Request.JSON({
+								url: 'http://jean-nicolas.name/labs/google_maps/kml_gen/get_bbox.php?BBOX=' + bbox + '&zoom=' + Zoom + '&kjson=true',
+								onSuccess: function(json){
+									
+									var val = null;
+									var markersChain = new Chain();
+									
+									markersChain.chain(
+										function(){
+											if (markers.length != 0) {
+										
+												markers.each(function(val){
+													val.setMap(null);
+												});
+										
+												markers = [];
+												markersArray = [];
+											}
+										},
+										function(){
+											json.each(function(val){
+										
+											if (!markersArray.contains(val.id)) {
+																		
+												var contStr = '<h2>' + val.name + '</h2>';
+											
+												var marker = new googleMaps.Marker({
+													position: new googleMaps.LatLng(val.lat, val.lng),
+													map: map,
+													title: val.name,
+													draggable: true,
+													dbMarkerID: val.id
+												});
+												
+												googleMapsEvent.addListener(marker, 'click', function(){
+													infowindow.setContent(contStr + '<br/> The database ID: ' + marker.dbMarkerID);
+													infowindow.open(map, marker);
+												});
+											
+												googleMapsEvent.addListener(marker, 'dragend', function(){
+													var markerPosition = marker.position.toUrlValue();
+												});
+											
+												markers.include(marker);
+												markersArray.include(val.id);
+												marker.setMap(map);
+											
+											}
+										
+											});
+										}
+									);
+									
+									markersChain.callChain();
+									markersChain.callChain();
+									
+								}
+							}).get();
+						}).delay(1500);
+					}
+				});*/
+				
+				var GMapsMarkerLoader = new Class({
+					Implements: [Options, Events],
+					options : {
+						map: map,
+						googleMapsEvent: googleMapsEvent,
+						url: url,
+						delay: 1500,
+						minZoom: 5
+					},
+					initialize: function(options){
+						this.setOptions(options);
+						this.mapBoundsChanged(this.options.map, this.otpions.googleMapsEvent, this.options.url, this.options.delay, this.options.minZoom);
+					},
+					mapBoundsChanged: function(map, googleMapsEvent, url, delay, minZoom){
+						
+						var markersArray = [];
+						var markers = [];
+						var boundsChangedTimer = false;
+						
+						googleMapsEvent.addListener(map, 'bounds_changed', function() {
+							
+							var Zoom = map.getZoom();
+							
+							if(Zoom >= minZoom){
+								
+								$clear(boundsChangedTimer);
+								
+								var ne = map.getBounds().getNorthEast();
+								var n = ne.b;
+								var e = ne.c;
+								var sw = map.getBounds().getSouthWest();
+								var s = sw.b;
+								var w = sw.c;
+								var bbox = w + ', ' + s + ',' + e + ',' + n;
+						
+								boundsChangedTimer = (function(){
+									new Request.JSON({
+										url: url + '?BBOX=' + bbox + '&zoom=' + Zoom + '&kjson=true',
+										onSuccess: function(json){
+									
+											var val = null;
+											var markersChain = new Chain();
+									
+											markersChain.chain(
+												function(){
+													if (markers.length != 0) {
+										
+														markers.each(function(val){
+															val.setMap(null);
+														});
+										
+													markers = [];
+													markersArray = [];
+												}
+											},
+											function(){
+												json.each(function(val){
+										
+												if (!markersArray.contains(val.id)) {
+																		
+													var contStr = '<h2>' + val.name + '</h2>';
+											
+													var marker = new googleMaps.Marker({
+														position: new googleMaps.LatLng(val.lat, val.lng),
+														map: map,
+														title: val.name,
+														draggable: true,
+														dbMarkerID: val.id
+													});
+												
+													googleMapsEvent.addListener(marker, 'click', function(){
+														infowindow.setContent(contStr + '<br/> The database ID: ' + marker.dbMarkerID);
+														infowindow.open(map, marker);
+													});
+											
+													googleMapsEvent.addListener(marker, 'dragend', function(){
+														var markerPosition = marker.position.toUrlValue();
+													});
+											
+													markers.include(marker);
+													markersArray.include(val.id);
+													marker.setMap(map);
+											
+												}
+										
+												});
+											}
+										);
+									
+										markersChain.callChain();
+										markersChain.callChain();
+									
+									}
+								}).get();
+							}).delay(delay);
+						}
+					});
+						
+					}
+				});
+				
+				$('goTo').addEvent('click', function(){
+					map.panTo(new googleMaps.LatLng(37.4569, -122.1569));
+				});
+				
+			});
+		</script>
+	</body>
+</html>

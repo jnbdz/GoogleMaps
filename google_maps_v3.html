@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Raf_1 Test</title>
+	</head>
+	<body>
+		<button type="button" id="goTo">Pan to</button>
+		<div id="map_canvas" style="width: 800px; height: 400px"></div>
+		<script src="../mootools-1.2.3-core.js"></script>
+		<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script>
+			window.addEvent('load', function(){
+				
+				/*
+				 * ---------------------
+				 * Init. Google Maps
+				 * ---------------------
+				 */
+				
+				var latlng = new google.maps.LatLng(0, 0);
+				var mapOptions = {
+					zoom: 1,
+					center: latlng,
+					mapTypeId: google.maps.MapTypeId.HYBRID
+				};
+				var map = new google.maps.Map($("map_canvas"), mapOptions);
+
+				google.maps.event.addListener(map, 'bounds_changed', function() {
+					if(map.getZoom() >= 10){
+						console.log(map.getBounds());
+					}
+				});
+				
+				var contentString = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+    '<div id="bodyContent"><img src="../ex-masturbator-shirt-22082-1233763796-7_thumb.jpg" alt=" "/>'+
+    '<p>Attribution: Uluru, <a href="http://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+    'http://en.wikipedia.org/w/index.php?title=Uluru</a> (last visited June 22, 2009).</p>'+
+    '</div>'+
+    '</div>';
+
+var infowindow = new google.maps.InfoWindow({
+    content: contentString
+});
+
+var myLatlng = new google.maps.LatLng(37.4569, -122.1569);
+
+var marker = new google.maps.Marker({
+    position: myLatlng,
+    map: map,
+    title:"Uluru (Ayers Rock)"
+});
+
+google.maps.event.addListener(marker, 'click', function() {
+  infowindow.open(map,marker);
+});
+				
+				$('goTo').addEvent('click', function(){
+					map.panTo(new google.maps.LatLng(37.4569, -122.1569));
+				});
+				
+			});
+		</script>
+	</body>
+</html>

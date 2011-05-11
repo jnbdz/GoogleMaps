@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Google Maps 2 Test</title>
+	</head>
+	<body>
+		<button type="button" id="goTo">Pan to</button> | <button type="button" id="addMarker">Add Marker</button> <span id="canAddMarker">false</span>
+		<div id="map_canvas" style="width: 800px; height: 400px"></div>
+		<div>
+		//	1. Flow between images that have not been marked on the map. So that you don't need to re-click on the image everytime in a process to marke them on the map.
+			<br/>
+			2. Able to drag others.
+		</div>
+		<script src="../mootools-1.2.3-core.js"></script>
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAMPAcnO1QJjmTyQFTSg2Q5RTjwN83yyKJB8VqfD-yk-Z9ltYy6RT-qg6wBK2JJZ-iYr08tz0vhPQctw"></script>
+		<script>
+			window.addEvent('load', function(){
+				
+				/*
+				 * ---------------------
+				 * Init. Google Maps
+				 * ---------------------
+				 */
+				
+				var map = new GMap2($("map_canvas"));
+				var center = new GLatLng(37.4419, -122.1419);
+				map.setCenter(center, 2);
+				
+				var gx = new GGeoXml("http://jean-nicolas.name/labs/google_maps/kml_gen/NetworkLink.kml");
+				
+				//console.log(gx);
+				
+				$('addMarker').addEvent('click', function(){
+					$('canAddMarker').set('text', 'true');
+				});
+				
+				GEvent.addListener(map, "click", function(overlay, latlng) {
+					if ($('canAddMarker').get('text') === 'true') {
+						var marker = new GMarker(latlng, {draggable: true});
+						marker.bindInfoWindowHtml("<h1>You clicked here!</h1>");
+						map.addOverlay(marker);
+						
+						$('canAddMarker').set('text', 'false');
+					}
+				});
+				
+				map.addOverlay(gx);
+				
+				map.setUIToDefault();
+				
+				$('goTo').addEvent('click', function(){
+					map.panTo(new GLatLng(37.4569, -122.1569));
+				});
+				
+				/*
+				 * ------------------------
+				 * Init. markers draggable
+				 * ------------------------
+				 */
+				
+				//var marker = new GMarker(center, {draggable: true});
+				
+				/*GEvent.addListener(marker, "dragstart", function() {
+					map.closeInfoWindow();
+				});
+				
+				GEvent.addListener(marker, "dragend", function() {
+					marker.openInfoWindowHtml("Just bouncing along...");
+				});*/
+				
+				//map.addOverlay(marker);
+				
+			});
+		</script>
+	</body>
+</html>

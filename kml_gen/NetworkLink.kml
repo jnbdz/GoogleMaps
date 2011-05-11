@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<NetworkLink>
+    <name>Rate restaurant Search</name>
+    <description>Restorant search.</description>
+    <Link>
+        <href>http://jean-nicolas.name/labs/google_maps/kml_gen/get_bbox.php</href>
+        <viewRefreshMode>onStop</viewRefreshMode>
+        <viewRefreshTime>1</viewRefreshTime>
+        <viewFormat>BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]</viewFormat>
+    </Link>
+</NetworkLink>
+</kml>

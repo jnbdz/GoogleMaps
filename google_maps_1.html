@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Raf_1 Test</title>
+		<style>
+			body{
+				
+			}
+		</style>
+	</head>
+	<body>
+		<button type="button" id="goTo">Pan to</button>
+		<div id="map_canvas" style="width: 800px; height: 400px"></div>
+		<script src="../mootools-1.2.3-core.js"></script>
+		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key=ABQIAAAAMPAcnO1QJjmTyQFTSg2Q5RTjwN83yyKJB8VqfD-yk-Z9ltYy6RT-qg6wBK2JJZ-iYr08tz0vhPQctw"></script>
+		<script>
+			window.addEvent('load', function(){
+				
+				/*
+				 * ---------------------
+				 * Init. Google Maps
+				 * ---------------------
+				 */
+				
+				var map = new GMap2($("map_canvas"));
+				map.setCenter(new GLatLng(37.4419, -122.1419), 2);
+				
+				var gx = new GGeoXml("http://jean-nicolas.name/labs/google_maps/data/nestoria-1.kml");
+				
+				map.addOverlay(gx);
+				
+				map.setUIToDefault();
+				
+				$('goTo').addEvent('click', function(){
+					map.panTo(new GLatLng(37.4569, -122.1569));
+				});
+				
+			});
+		</script>
+	</body>
+</html>
